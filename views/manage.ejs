@@ -1,7 +1,6 @@
 <!-- add header -->
 <%- include('includes/_header') %>
-<!-- end header -->
-<!-- Main section -->
+
 <main id="main">
 	<a href="/add-drug">
 		<button id="new">New Drug <i class="fas fa-pills"></i></button>
@@ -20,7 +19,6 @@
 			</tr>
 		</thead>
 		<tbody>
-			<!-- Loop through drugs -->
 			<% for(let i = 0; i < drugs.length; i++) {%>
 			<tr>
 				<td><%= i + 1 %></td>
@@ -30,19 +28,37 @@
 				<td><%= drugs[i].perDay %></td>
 				<td><%= drugs[i].dosage %></td>
 				<td>
-					<a href="/update-drug?id=<%= drugs[i]._id%>">
-						<span class='fa fa-edit'></span>
+					<a href="/update-drug/<%= drugs[i]._id %>">
+    					<span class='fa fa-edit'></span>
 					</a>
-					<a class="delete" data-id=<%= drugs[i]._id%> ><!-- give each delete button a unique ID -->
+
+					<a href="#" class="delete" data-id="<%= drugs[i]._id%>">
 						<span class='fa fa-trash'></span>
 					</a>
 				</td>
 			</tr>
-			<% } %> <!--  End loop -->
+			<% } %>
 		</tbody>
 	</table>
 </main>
-<!-- End main section -->
-<!-- add footer -->
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const deleteButtons = document.querySelectorAll(".delete");
+  deleteButtons.forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const id = btn.getAttribute("data-id");
+      if (confirm("Are you sure to delete this drug?")) {
+        const res = await fetch(`/api/drugs/${id}`, { method: "DELETE" });
+        const data = await res.json();
+        alert(data.message);
+        window.location.reload();
+      }
+    });
+  });
+});
+</script>
+
+
 <%- include('includes/_footer') %>
-<!-- end footer
